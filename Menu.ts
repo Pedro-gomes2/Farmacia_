@@ -1,6 +1,5 @@
 import { Cosmeticos } from './src/model/Cosmeticos';
 import { Medicamentos } from './src/model/Medicamentos';
-import { Produtos } from './src/model/Produtos';
 import { ProdutoController } from './src/ProdutoController/ProdutoController';
 import { colors }  from './src/util/Colors';
 import { Input } from "./src/util/Inputs";
@@ -14,7 +13,7 @@ function main(){
 
     criarprodutoTeste();
     while(true){
-        console.log("**********************************************");
+        console.log(colors.fg.white,"**********************************************");
         console.log("                                              ");
         console.log("             FARMACIA DO JOAO                 ");
         console.log("                                              ");
@@ -26,15 +25,15 @@ function main(){
         console.log("         4 - Atualizar Produtos               ");
         console.log("         5 - Deletar Produtos                 ");
         console.log("         6 - Sair                             ");
-        console.log("**********************************************");
+        console.log("**********************************************", colors.reset);
 
 
-        opcao = Input.questionInt("Digite a opção Desejada: ");
+        opcao = Input.questionInt("Digite a opcao Desejada: ");
 
         if(opcao == 6){
             console.log(`Finalizar Programa`);
             sobre();
-        
+            process.exit(0);
         
         
         }
@@ -80,6 +79,9 @@ function main(){
 }
 main();
 
+
+//funçao criar Produtos
+
 function criarProduto(){
     console.log("Digite o id do Produto: ");
     const id = Input.questionInt("");
@@ -94,18 +96,18 @@ function criarProduto(){
         case 1:
             console.log("Digite o nome do Generico: ");
             const generico:string = Input.question("");
-            produto.cadastrarProduto(new Medicamentos(id,nome,tipo,preco,generico));
+            produto.cadastrarProduto(new Medicamentos(produto.gerarNumero(),nome,tipo,preco,generico));
         break;
         case 2:
             console.log("Digite o nome do Cosmeticos: ");
             const cosmeticos:string = Input.question("");
-            produto.cadastrarProduto(new Cosmeticos(id,nome,tipo,preco,cosmeticos));
+            produto.cadastrarProduto(new Cosmeticos(produto.gerarNumero(),nome,tipo,preco,cosmeticos));
         break;
     }
 }
 
 
-
+//Funçao dados 
 
 export function sobre(): void {
     console.log("\n*****************************************************");
@@ -123,17 +125,21 @@ function keyPress(): void{
     Input.prompt();
 }
 
+
+// função para teste
 function criarprodutoTeste():void{
    
     // Instâncias da Classe Medicamentos
-    produto.cadastrarProduto(new Medicamentos(123,"Analgésicos",1,20.00,"Dorflex"));
-    produto.cadastrarProduto(new Medicamentos(321,"vitamina",1,25.00,"calciotran"));
+    produto.cadastrarProduto(new Medicamentos(produto.gerarNumero(),"Analgésicos",1,20.00,"Dorflex"));
+    produto.cadastrarProduto(new Medicamentos(produto.gerarNumero(),"vitamina",1,25.00,"calciotran"));
  
     // Instâncias da Classe ContaPoupança
-    produto.cadastrarProduto(new Cosmeticos(456,"Batom",2,50.00,"wepink"));
-    produto.cadastrarProduto(new Cosmeticos(654,"rimel",2,15,"avon"));
+    produto.cadastrarProduto(new Cosmeticos(produto.gerarNumero(),"Batom",2,50.00,"wepink"));
+    produto.cadastrarProduto(new Cosmeticos(produto.gerarNumero(),"rimel",2,15,"avon"));
  
 }
+
+
 function procurarPorId(){
     console.log("digite o id do produto");
     const id = Input.questionInt("");
@@ -141,7 +147,7 @@ function procurarPorId(){
 
 }
 
-//Opçao 5 : deletarr Produto por id
+//: deletarr Produto por id
 
 function deletarProdutoporID():void{
 
@@ -153,23 +159,18 @@ function deletarProdutoporID():void{
 //atulizar 
 function atualizarProduto():void{
     console.log("Digite o ID do produto")
-    const numero  = Input.questionInt("");
+    const id  = Input.questionInt("");
 
-    const prod = produto.buscarNoArray(numero);
+    const produtoo = produto.buscarNoArray(id);
 
-    if (prod !== null){
-        let id:number= prod.id;
-        let nome :string = prod.nome;
-        const tipo:number = prod.tipo;
-        let preco:number = prod.preco;
+    if (produtoo !== null){
+        const idOriginal = produtoo.id; // ID usado para localizar na lista
 
-        //ATUALIZAR ID
+        
+        let nome :string = produtoo.nome;
+        const tipo:number = produtoo.tipo;
+        let preco:number = produtoo.preco;
 
-        console.log(`\nID atual: ${id}`);
-        console.log("Digite o novo ID:\n (Pressione ENTER para manter o valor atual)");
-        let entrada = Input.question("");
-
-        id = entrada.trim() === ""? id: parseInt(entrada);
 
 
         //ATUALIZAR NOME 
@@ -190,10 +191,11 @@ function atualizarProduto():void{
         //Atualizar tipo
 
         switch(tipo){
-            case 1:
-                let generico:string = ( produto as unknown as Medicamentos).generico;
+            case 1:// Medicamentos 
+               
+                let generico:string= (produtoo as Medicamentos).generico;
 
-                console.log(`\nO generico Atual: ${generico}`);
+                console.log(`\nO Generico Atual: ${generico}`);
                 console.log("Digite o novo\n (Pressione ENTER para manter o valor atual)");
                 let entrada = Input.question("");
                 generico = entrada.trim() ===""? generico : entrada;
@@ -201,15 +203,16 @@ function atualizarProduto():void{
                 produto.atualizarProduto(new Medicamentos (id,nome,tipo,preco,generico));
 
             break;
-            case 2:
-                let fragancia:string = ( produto as unknown as Cosmeticos).fragancia;
+            case 2://cosmetico
+
+                let fragancia:string = ( produtoo as Cosmeticos).fragancia;
 
                 console.log(`\nA fragancia Atual: ${fragancia}`);
                 console.log("Digite o novo\n (Pressione ENTER para manter o valor atual)");
                 let entra = Input.question("");
                 fragancia = entra.trim() ===""?fragancia : entra;
 
-                produto.atualizarProduto(new Medicamentos (id,nome,tipo,preco,fragancia));
+                produto.atualizarProduto(new Cosmeticos (id,nome,tipo,preco,fragancia));
             break;
 
 
@@ -218,12 +221,15 @@ function atualizarProduto():void{
 
 
         }
+        
 
 
 
 
 
 
+    }else{
+        console.log("Produto nao Encontrado!");
     }
 
 

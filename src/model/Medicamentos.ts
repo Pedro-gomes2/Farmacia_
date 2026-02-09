@@ -1,6 +1,7 @@
+import { Cosmeticos } from "./Cosmeticos";
 import { Produtos } from "./Produtos";
 
-export class Medicamentos extends Produtos{
+export class Medicamentos extends Produtos {
     
     private _generico: string;
 
@@ -21,6 +22,7 @@ export class Medicamentos extends Produtos{
 
     public visualizar(): void {
         super.visualizar();
+		console.log(`Generico: ${this._generico}`);
         
     }
 

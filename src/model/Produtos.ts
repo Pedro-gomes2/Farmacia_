@@ -53,10 +53,10 @@ export abstract class Produtos{
     
     public visualizar():void{
         console.log("*************************************");
-        console.log(`ID: ${this.id} `);
-        console.log(`Nome: ${this.nome} `);
-        console.log(`Tipo: ${this.tipo} `);
-        console.log(`Preço: ${this.preco.toFixed(2)} `);
+        console.log(`\n       ID: ${this.id} `);
+        console.log(`\n     Nome: ${this.nome} `);
+        console.log(`\n     Tipo: ${this.tipo} `);
+        console.log(`\n     Preço: ${this.preco.toFixed(2)} `);
         
 
     }
